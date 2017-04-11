@@ -13,9 +13,10 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import static jdk.nashorn.internal.objects.NativeArray.map;
 import lombok.extern.slf4j.Slf4j;
 import nu.nil.mastodon.bitter_fox.mastodon4j.entity.Account;
+import nu.nil.mastodon.bitter_fox.mastodon4j.entity.Status;
+import nu.nil.mastodon.bitter_fox.mastodon4j.entity.Toot;
 
 /**
  *
@@ -63,6 +64,13 @@ public class Client {
     }
     public Account doUnfollow(String id) {
         return postWithAuth("/api/v1/accounts/" + id + "/unfollow", Account.class);
+    }
+    
+    public Status toot(Toot toot) {
+        return endpoint.path("/api/v1/statuses")
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + config.accessToken)
+                .post(Entity.json(toot), Status.class);
     }
 
     private <T> T getWithAuth(String path, Class<T> clazz) {
